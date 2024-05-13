@@ -1,0 +1,265 @@
+from sqlalchemy.orm import Session
+import models, schemas
+import bcrypt
+from sqlalchemy import desc
+
+SALT = b'$2b$12$0nFckzktMD0Fb16a8JsNA.'
+
+def get_user(db: Session, id_user: int):
+    return db.query(models.User).filter(models.User.id_user == id_user).first()
+
+def get_user_by_email(db: Session, email: str):
+    return db.query(models.User).filter(models.User.email_user == email).first()
+
+def get_user_by_no_telp(db: Session, no_telp: str):
+    return db.query(models.User).filter(models.User.no_telp_user == no_telp).first()
+
+def get_users(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.User).offset(skip).limit(limit).all()
+
+def get_relasi(db: Session, id_user: int):
+    return db.query(models.Relasi).filter(models.Relasi.id_user == id_user).all()
+
+def get_relasi_by_id(db: Session, id_relasi: int):
+    return db.query(models.Relasi).filter(models.Relasi.id_relasi == id_relasi).first()
+
+def get_dokter(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.Dokter).offset(skip).limit(limit).all()
+
+def get_dokter_by_id(db: Session, id_dokter: int):
+    return db.query(models.Dokter).filter(models.Dokter.id_dokter == id_dokter).first()
+
+def get_obat(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.Obat).offset(skip).limit(limit).all()
+
+def get_obat_by_id(db: Session, id_obat: int):
+    return db.query(models.Obat).filter(models.Obat.id_obat == id_obat).first()
+
+# delete semua user
+# def delete_all_user(db: Session):
+#     jum_rec = db.query(models.User).delete()
+#     db.commit()
+#     return jum_rec
+
+def hashPassword(passwd: str):
+    bytePwd = passwd.encode('utf-8')
+    pwd_hash = bcrypt.hashpw(bytePwd, SALT).decode('utf-8')
+    return pwd_hash
+
+# ############  untuk cart
+# def create_cart(db: Session, cart: schemas.Cart):
+#     db_cart = models.Cart(user_id = cart.user_id, item_id = cart.item_id, quantity = cart.quantity )
+#     db.add(db_cart)
+#     db.commit()
+#     db.refresh(db_cart)
+#     return db_cart
+
+# def delete_cart_by_id(db: Session, id_cart:int):
+#     hasil = db.query(models.Cart).filter(models.Cart.id == id_cart).delete()
+#     db.commit()
+#     return {"record_dihapus":hasil} 
+
+# # ada hapus semua cart berdasarkan user
+# # asumsikan kalau sudah selesai (sudah sampai ke user), isi cart dikosongkan
+# def delete_cart_by_userid(db: Session, user_id:int):
+#     hasil = db.query(models.Cart).filter(models.Cart.user_id == user_id).delete()
+#     db.commit()
+#     return {"record_dihapus":hasil} 
+
+# # semua belanja semua user, untuk debug, jangan digunakan
+# # def get_carts(db: Session, skip: int = 0, limit: int = 100):
+# #     return db.query(models.Cart).offset(skip).limit(limit).all()
+
+# def get_carts_by_userid(db: Session, user_id:int, skip: int = 0, limit: int = 100 ):
+#     return db.query(models.Cart).filter(models.Cart.user_id == user_id).offset(skip).limit(limit).all()
+
+# # true kalau keranjang kosong
+# def get_is_carts_empty_userid(db: Session, user_id:int):
+#     exists = db.query(models.Cart.id).filter(models.Cart.user_id == user_id).exists()
+#     if db.query(exists).scalar():
+#         return False
+#     else:
+#         return True
+
+
+# # ============
+# # status dan pembayaran
+
+
+# def pembayaran (db: Session, user_id:int):
+#     status = get_last_status(db,user_id=user_id)
+#     # hanya proses yang statusnya belum_bayar, selain itu abaikan 
+#     temp = status["status"]
+#     if temp.status=="belum_bayar":
+#         insert_status(db=db,user_id=user_id,status="sudah_bayar")
+#         return {"status":"status diupdate sudah bayar"}
+#     else:
+#         return {"status":"tidak diproses, cek status"}
+
+# def insert_status(db:Session, user_id:int, status: str):
+#     db_status = models.Status(user_id = user_id, status = status )
+#     db.add(db_status)
+#     db.commit()
+#     db.refresh(db_status)
+#     return db_status
+
+# #   keranjang_kosong, belum_bayar, bayar, (pesanan_diterima atau pesanan_batal), pesanan_diproses, pesanaan_diantar, 
+# def get_last_status(db: Session,user_id:int):
+#     last_status = db.query(models.Status).filter(models.Status.user_id == user_id).order_by(desc(models.Status.timestamp)).first()
+#     if last_status:
+#         return {"status":last_status}
+#     else:
+#         #tidak ada status, cek cart
+#         if get_is_carts_empty_userid(db,user_id=user_id):
+#             #kosong, update status
+#             insert_status(db,user_id=user_id,status="keranjang_kosong")
+#             return get_last_status(db,user_id=user_id)
+       
+
+# #==============
+
+# ######### user
+
+def create_user(db: Session, user: schemas.UserCreate):
+    hashed_password = hashPassword(user.password_user)
+    db_user = models.User(
+        nama_lengkap_user=user.nama_lengkap_user,
+        tgl_lahir_user=user.tgl_lahir_user,
+        gender_user=user.gender_user,
+        alamat_user=user.alamat_user,
+        no_bpjs_user=user.no_bpjs_user,
+        no_telp_user=user.no_telp_user,
+        email_user=user.email_user,
+        password_user=hashed_password,
+        foto_user=user.foto_user,
+    )
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    return db_user
+
+## relasi
+def create_relasi(db: Session, relasi: schemas.RelasiCreate):
+    db_relasi = models.Relasi(
+        id_user=relasi.id_user,
+        nama_lengkap_relasi=relasi.nama_lengkap_relasi,
+        no_bpjs_relasi=relasi.no_bpjs_relasi,
+        tgl_lahir_relasi=relasi.tgl_lahir_relasi,
+        gender_relasi=relasi.gender_relasi,
+        no_telp_relasi=relasi.no_telp_relasi,
+        alamat_relasi=relasi.alamat_relasi,
+        foto_relasi=relasi.foto_relasi,
+        tipe_relasi=relasi.tipe_relasi,
+    )
+    db.add(db_relasi)
+    db.commit()
+    db.refresh(db_relasi)
+    return db_relasi
+
+def delete_relasi_by_id(db: Session, id_relasi: int):
+    hasil = db.query(models.Relasi).filter(models.Relasi.id_relasi == id_relasi).delete()
+    db.commit()
+    return {"record_dihapus":hasil} 
+
+## dokter
+def create_dokter(db: Session, dokter: schemas.DokterCreate):
+    db_dokter = models.Dokter(
+        nama_lengkap_dokter=dokter.nama_lengkap_dokter,
+        spesialisasi_dokter=dokter.spesialisasi_dokter,
+        lama_pengalaman_dokter=dokter.lama_pengalaman_dokter,
+        alumnus_dokter=dokter.alumnus_dokter,
+        harga_dokter=dokter.harga_dokter,
+        minat_klinis_dokter=dokter.minat_klinis_dokter,
+        foto_dokter=dokter.foto_dokter,
+        rating_dokter=dokter.rating_dokter,
+        id_poli=dokter.id_poli,
+    )
+    db.add(db_dokter)
+    db.commit()
+    db.refresh(db_dokter)
+    return db_dokter
+
+def delete_dokter_by_id(db: Session, id_dokter: int):
+    hasil = db.query(models.Dokter).filter(models.Dokter.id_dokter == id_dokter).delete()
+    db.commit()
+    return {"record_dihapus":hasil} 
+
+## obat
+def create_obat(db: Session, obat: schemas.ObatCreate):
+    db_obat = models.Obat(
+        nama_obat=obat.nama_obat,
+        deskripsi_obat=obat.deskripsi_obat,
+        komposisi_obat=obat.komposisi_obat,
+        dosis_obat=obat.dosis_obat,
+        peringatan_obat=obat.peringatan_obat,
+        efek_samping_obat=obat.efek_samping_obat,
+        foto_obat=obat.foto_obat,
+        id_jenis_obat=obat.id_jenis_obat,
+    )
+    db.add(db_obat)
+    db.commit()
+    db.refresh(db_obat)
+    return db_obat
+
+def delete_obat_by_id(db: Session, id_obat: int):
+    hasil = db.query(models.Obat).filter(models.Obat.id_obat == id_obat).delete()
+    db.commit()
+    return {"record_dihapus":hasil} 
+
+# ##==================== item
+
+# # ambil semua item
+# def get_items(db: Session, skip: int = 0, limit: int = 100):
+#     return db.query(models.Item).offset(skip).limit(limit).all()
+
+# # ambil item dengan id tertentu
+# def get_item_by_id(db: Session, item_id: int):
+#     return db.query(models.Item).filter(models.Item.id == item_id).first()
+
+
+# # ambil item yang cocok dengan keyword di deskripsi
+# def get_item_by_keyword(db: Session, keyword: str):
+#     #Artikel.Benennung.like("%"+prop+"%")
+#     return db.query(models.Item).filter(models.Item.description.ilike("%"+keyword+"%")).all()
+#     #return db.query(models.Item).filter(models.Item.like("%"+keyword+"%")).first()
+
+
+# # tambah item
+# def create_item(db: Session, item: schemas.ItemBase):
+#     db_item = models.Item(title=item.title, description = item.description, price = item.price, img_name = item.img_name )
+#     db.add(db_item)
+#     db.commit()
+#     db.refresh(db_item)
+#     return db_item
+
+
+# # delete semua item
+# def delete_all_item(db: Session):
+#     jum_rec = db.query(models.Item).delete()
+#     db.commit()
+#     return jum_rec
+
+
+
+
+
+
+
+
+
+
+# # gagal euy
+# # def insert_cart(db:Session, cart: schemas.CartBase ):
+# #     #cart_record = models.Cart(user_id=cart.user_id, item_id=cart.item_id, quantity = cart.quantity)
+# #     user = db.query(models.User).filter_by(id=cart.user_id).first()
+# #     # Next, fetch the item from the database
+# #     item = db.query(models.Item).filter_by(id=cart.item_id).first()
+# #     # Append the item to the user's cart
+# #     user.cart.append(item)
+# #     #db.add(cart_record)
+# #     db.commit()
+# #     #db.refresh(cart_record)
+# #     return user
+
+
+

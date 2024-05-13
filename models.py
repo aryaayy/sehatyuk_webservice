@@ -1,0 +1,119 @@
+from database import BaseDB
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Date, Float, Text
+from sqlalchemy.orm import relationship
+# from sqlalchemy.orm import Mapped
+# from typing import List
+# from sqlalchemy import Table
+# from sqlalchemy import DateTime
+
+class Dokter(BaseDB):
+    __tablename__ = 'dokter'
+
+    id_dokter = Column(Integer, primary_key=True, index=True)
+    nama_lengkap_dokter = Column(String(127), nullable=False)
+    spesialisasi_dokter = Column(String(32), nullable=False)
+    lama_pengalaman_dokter = Column(Integer, nullable=False)
+    alumnus_dokter = Column(String(64), nullable=False)
+    harga_dokter = Column(Integer, nullable=False)
+    minat_klinis_dokter = Column(String(255), nullable=False)
+    foto_dokter = Column(String(512), nullable=False)
+    rating_dokter = Column(Float, nullable=False)
+    id_poli = Column(Integer, ForeignKey('poli.id_poli'), nullable=False)
+
+class JadwalDokter(BaseDB):
+    __tablename__ = 'jadwal_dokter'
+
+    id_jadwal_dokter = Column(Integer, primary_key=True, index=True)
+    id_dokter = Column(Integer, ForeignKey('dokter.id_dokter'), nullable=False)
+    tanggal_jadwal_dokter = Column(Date, nullable=False)
+    is_full = Column(Boolean, nullable=False)
+
+class JanjiTemu(BaseDB):
+    __tablename__ = 'janji_temu'
+
+    id_janji_temu = Column(Integer, primary_key=True, index=True)
+    kode_janji_temu = Column(String(255), nullable=False)
+    tgl_janji_temu = Column(Date, nullable=False)
+    id_dokter = Column(Integer, ForeignKey('dokter.id_dokter'), nullable=False)
+    id_user = Column(Integer, ForeignKey('user.id_user'), nullable=False)
+    is_relasi = Column(Boolean, nullable=False)
+    id_relasi = Column(Integer, nullable=False)
+    biaya_janji_temu = Column(Integer, nullable=False)
+
+class JanjiTemuAsOrangLain(BaseDB):
+    __tablename__ = 'janji_temu_as_orang_lain'
+
+    id_janji_temu_as_orang_lain = Column(Integer, primary_key=True, index=True)
+    kode_janji_temu_as_orang_lain = Column(String(255), nullable=False)
+    tgl_janji_temu_as_orang_lain = Column(Date, nullable=False)
+    id_dokter = Column(Integer, ForeignKey('dokter.id_dokter'), nullable=False)
+    id_user = Column(Integer, ForeignKey('user.id_user'), nullable=False)
+    biaya_janji_temu_as_orang_lain = Column(Integer, nullable=False)
+    nama_lengkap_orang_lain = Column(String(127), nullable=False)
+    no_bpjs_orang_lain = Column(String(18), nullable=False)
+    tgl_lahir_orang_lain = Column(Date, nullable=False)
+    gender_orang_lain = Column(String(1), nullable=False)
+    no_telp_orang_lain = Column(String(18), nullable=False)
+    alamat_orang_lain = Column(String(255), nullable=False)
+
+class JenisObat(BaseDB):
+    __tablename__ = 'jenis_obat'
+
+    id_jenis_obat = Column(Integer, primary_key=True, index=True)
+    jenis_obat = Column(String(16), nullable=False)
+
+class Obat(BaseDB):
+    __tablename__ = 'obat'
+
+    id_obat = Column(Integer, primary_key=True, index=True)
+    nama_obat = Column(String(128), nullable=False)
+    deskripsi_obat = Column(String(128), nullable=False)
+    komposisi_obat = Column(Text, nullable=False)
+    dosis_obat = Column(String(128), nullable=False)
+    peringatan_obat = Column(Text, nullable=False)
+    efek_samping_obat = Column(Text, nullable=False)
+    foto_obat = Column(String(255), nullable=False)
+    id_jenis_obat = Column(Integer, ForeignKey('jenis_obat.id_jenis_obat'), nullable=False)
+
+class Poli(BaseDB):
+    __tablename__ = 'poli'
+
+    id_poli = Column(Integer, primary_key=True, index=True)
+    nama_poli = Column(String(16), nullable=False)
+
+class Relasi(BaseDB):
+    __tablename__ = 'relasi'
+
+    id_relasi = Column(Integer, primary_key=True, index=True)
+    id_user = Column(Integer, ForeignKey('user.id_user'), nullable=False)
+    nama_lengkap_relasi = Column(String(128), nullable=False)
+    no_bpjs_relasi = Column(String(18), nullable=False)
+    tgl_lahir_relasi = Column(Date, nullable=False)
+    gender_relasi = Column(String(1), nullable=False)
+    no_telp_relasi = Column(String(18), nullable=False)
+    alamat_relasi = Column(String(128), nullable=False)
+    foto_relasi = Column(String(255), nullable=False)
+    tipe_relasi = Column(String(16), nullable=False)
+
+class Review(BaseDB):
+    __tablename__ = 'review'
+
+    id_review = Column(Integer, primary_key=True, index=True)
+    id_user = Column(Integer, ForeignKey('user.id_user'), nullable=False)
+    id_dokter = Column(Integer, ForeignKey('dokter.id_dokter'), nullable=False)
+    rating = Column(Integer, nullable=False)
+    review_content = Column(Text)
+
+class User(BaseDB):
+    __tablename__ = 'user'
+
+    id_user = Column(Integer, primary_key=True, index=True)
+    nama_lengkap_user = Column(String(127), nullable=False)
+    tgl_lahir_user = Column(Date, nullable=False)
+    gender_user = Column(String(1), nullable=False)
+    alamat_user = Column(String(255), nullable=False)
+    no_bpjs_user = Column(String(18), nullable=False)
+    no_telp_user = Column(String(16), nullable=False)
+    email_user = Column(String(127), nullable=False)
+    password_user = Column(String(128), nullable=False)
+    foto_user = Column(String(512), nullable=False)
