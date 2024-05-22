@@ -121,9 +121,13 @@ async def root():
 # create user 
 @app.post("/create_user/", response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
-    db_user = crud.get_user_by_email(db, email=user.email_user)
-    if db_user:
+    db_user_email = crud.get_user_by_email(db, email=user.email_user)
+    db_user_no_telp = crud.get_user_by_no_telp(db, no_telp=user.no_telp_user)
+    if db_user_email:
         raise HTTPException(status_code=400, detail="Error: Email sudah digunakan")
+    elif db_user_no_telp:
+        raise HTTPException(status_code=400, detail="Error: No telp sudah digunakan")
+
     return crud.create_user(db=db, user=user)
 
 
@@ -131,7 +135,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 @app.post("/login_email") #,response_model=schemas.Token
 async def login_email(user: schemas.UserLoginEmail, db: Session = Depends(get_db)):
     if not authenticate_by_email(db,user):
-        raise HTTPException(status_code=400, detail="Username atau password tidak cocock")
+        raise HTTPException(status_code=400, detail="Username atau password tidak cocok")
 
     # ambil informasi username
     user_login = crud.get_user_by_email(db,user.email_user)
@@ -145,7 +149,7 @@ async def login_email(user: schemas.UserLoginEmail, db: Session = Depends(get_db
 @app.post("/login_no_telp") #,response_model=schemas.Token
 async def login_no_telp(user: schemas.UserLoginPhone, db: Session = Depends(get_db)):
     if not authenticate_by_no_telp(db,user):
-        raise HTTPException(status_code=400, detail="Username atau password tidak cocock")
+        raise HTTPException(status_code=400, detail="Username atau password tidak cocok")
 
     # ambil informasi username
     user_login = crud.get_user_by_no_telp(db,user.no_telp_user)
