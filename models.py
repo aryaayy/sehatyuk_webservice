@@ -26,7 +26,7 @@ class JadwalDokter(BaseDB):
     id_jadwal_dokter = Column(Integer, primary_key=True, index=True)
     id_dokter = Column(Integer, ForeignKey('dokter.id_dokter'), nullable=False)
     tanggal_jadwal_dokter = Column(Date, nullable=False)
-    is_full = Column(Boolean, nullable=False)
+    is_full = Column(Integer, nullable=False)
 
 class JanjiTemu(BaseDB):
     __tablename__ = 'janji_temu'

@@ -28,8 +28,8 @@ class Dokter(DokterBase):
 # Jadwal Dokter
 class JadwalDokterBase(BaseModel):
     id_dokter: int
-    tanggal_jadwal_dokter: str
-    is_full: bool
+    tanggal_jadwal_dokter: date
+    is_full: int
 
 class JadwalDokterCreate(JadwalDokterBase):
     pass
