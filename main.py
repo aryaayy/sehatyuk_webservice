@@ -301,6 +301,13 @@ def read_janji_temu(id_user:int, db: Session = Depends(get_db),token: str = Depe
     janji_temu = crud.get_janji_temu(db, id_user=id_user)
     return janji_temu
 
+@app.get("/get_janji_temu_by_id/{id_janji_temu}", response_model=schemas.JanjiTemu)
+def read_janji_temu_id(id_janji_temu:int, db: Session = Depends(get_db),token: str = Depends(oauth2_scheme)):
+    usr =  verify_token(token) #bisa digunakan untuk mengecek apakah user cocok (tdk boleh akses data user lain)
+    print(usr)
+    janji_temu = crud.get_janji_temu_by_id(db, id_janji_temu=id_janji_temu)
+    return janji_temu
+
 # # hapus item cart berdasarkan user id
 # @app.delete("/clear_whole_carts_by_userid/{user_id}")
 # def delete_item_user_cart(user_id:int,db: Session = Depends(get_db),token: str = Depends(oauth2_scheme) ):

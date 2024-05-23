@@ -46,6 +46,9 @@ def get_jadwal_dokter_by_id(db: Session, id_dokter: int):
 
 def get_janji_temu(db: Session, id_user: int):
     return db.query(models.JanjiTemu).filter(models.JanjiTemu.id_user == id_user).all()
+
+def get_janji_temu_by_id(db: Session, id_janji_temu: int):
+    return db.query(models.JanjiTemu).filter(models.JanjiTemu.id_janji_temu == id_janji_temu).first()
 # delete semua user
 # def delete_all_user(db: Session):
 #     jum_rec = db.query(models.User).delete()
@@ -220,7 +223,6 @@ def delete_obat_by_id(db: Session, id_obat: int):
 ## janji_temu
 def create_janji_temu(db: Session, janji_temu: schemas.JanjiTemuCreate):
     db_janji_temu = models.JanjiTemu(
-        id_janji_temu = janji_temu.id_janji_temu,
         kode_janji_temu = janji_temu.kode_janji_temu,
         tgl_janji_temu = janji_temu.tgl_janji_temu,
         id_dokter = janji_temu.id_dokter,
