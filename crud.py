@@ -38,6 +38,11 @@ def get_obat_by_id(db: Session, id_obat: int):
 def get_jenis_obat_by_id(db: Session, id_jenis_obat: int):
     return db.query(models.JenisObat).filter(models.JenisObat.id_jenis_obat == id_jenis_obat).first()
 
+def get_jadwal_dokter(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.JadwalDokter).offset(skip).limit(limit).all()
+
+def get_jadwal_dokter_by_id(db: Session, id_dokter: int):
+    return db.query(models.JadwalDokter).filter(models.JadwalDokter.id_dokter == id_dokter).all()
 # delete semua user
 # def delete_all_user(db: Session):
 #     jum_rec = db.query(models.User).delete()

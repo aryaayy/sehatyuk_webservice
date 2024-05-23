@@ -229,6 +229,7 @@ def read_dokter(db: Session = Depends(get_db), skip: int = 0, limit: int = 100, 
     dokter = crud.get_dokter(db, skip, limit)
     return dokter
 
+
 #ambil isi dokter milik seorang user
 @app.get("/get_dokter_by_id/{id_dokter}", response_model=schemas.Dokter)
 def read_dokter(id_dokter:int, db: Session = Depends(get_db),token: str = Depends(oauth2_scheme)):
@@ -271,6 +272,20 @@ def read_obat(id_obat:int, db: Session = Depends(get_db),token: str = Depends(oa
 def delete_obat(id_obat:int,db: Session = Depends(get_db),token: str = Depends(oauth2_scheme) ):
     usr =  verify_token(token) #bisa digunakan untuk mengecek apakah user cocok (tdk boleh akses data user lain)
     return crud.delete_obat_by_id(db,id_obat)
+
+#ambil semua jadwal dokter
+@app.get("/get_jadwal_dokter/", response_model=list[schemas.JadwalDokter])
+def read_jadwal_dokter(db: Session = Depends(get_db), skip: int = 0, limit: int = 100, token: str = Depends(oauth2_scheme)):
+    usr =  verify_token(token) #bisa digunakan untuk mengecek apakah user cocok (tdk boleh akses data user lain)
+    jadwal_dokter = crud.get_jadwal_dokter(db, skip, limit)
+    return jadwal_dokter
+
+#ambil semua jadwal dokter berdasarkan id
+@app.get("/get_jadwal_dokter_by_id/{id_dokter}", response_model=list[schemas.JadwalDokter])
+def read_jadwal_dokter(id_dokter:int, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+    usr =  verify_token(token) #bisa digunakan untuk mengecek apakah user cocok (tdk boleh akses data user lain)
+    jadwal_dokter = crud.get_jadwal_dokter_by_id(db, id_dokter=id_dokter)
+    return jadwal_dokter
 
 # # hapus item cart berdasarkan user id
 # @app.delete("/clear_whole_carts_by_userid/{user_id}")
@@ -471,7 +486,6 @@ async def token(req: Request, form_data: OAuth2PasswordRequestForm = Depends(),d
     f.email_user = form_data.username
     f.password_user = form_data.password
     if not authenticate_by_email(db,f):
-        print('AAAAAAAAAA')
         raise HTTPException(status_code=400, detail="email or password tidak cocok")
 
     #info = crud.get_user_by_email_user(form_data.email_user)
