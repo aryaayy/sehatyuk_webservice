@@ -287,6 +287,13 @@ def read_jadwal_dokter(id_dokter:int, db: Session = Depends(get_db), token: str 
     jadwal_dokter = crud.get_jadwal_dokter_by_id(db, id_dokter=id_dokter)
     return jadwal_dokter
 
+@app.post("/create_janji_temu/", response_model=schemas.JanjiTemu ) # response_model=schemas.Cart 
+def create_janji_temu(
+    janji_temu: schemas.JanjiTemuCreate, db: Session = Depends(get_db),token: str = Depends(oauth2_scheme)):
+    usr =  verify_token(token) #bisa digunakan untuk mengecek apakah user cocok (tdk boleh akses data user lain)
+    # print(usr)
+    return crud.create_janji_temu(db=db, janji_temu=janji_temu)
+
 # # hapus item cart berdasarkan user id
 # @app.delete("/clear_whole_carts_by_userid/{user_id}")
 # def delete_item_user_cart(user_id:int,db: Session = Depends(get_db),token: str = Depends(oauth2_scheme) ):

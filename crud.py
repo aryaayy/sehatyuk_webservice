@@ -214,6 +214,23 @@ def delete_obat_by_id(db: Session, id_obat: int):
     db.commit()
     return {"record_dihapus":hasil} 
 
+## janji_temu
+def create_janji_temu(db: Session, janji_temu: schemas.JanjiTemuCreate):
+    db_janji_temu = models.JanjiTemu(
+        id_janji_temu = janji_temu.id_janji_temu,
+        kode_janji_temu = janji_temu.kode_janji_temu,
+        tgl_janji_temu = janji_temu.tgl_janji_temu,
+        id_dokter = janji_temu.id_dokter,
+        id_user = janji_temu.id_user,
+        is_relasi = janji_temu.is_relasi,
+        id_relasi = janji_temu.id_relasi,
+        biaya_janji_temu = janji_temu.biaya_janji_temu,
+    )
+    db.add(db_janji_temu)
+    db.commit()
+    db.refresh(db_janji_temu)
+    return db_janji_temu
+
 # ##==================== item
 
 # # ambil semua item
