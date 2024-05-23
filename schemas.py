@@ -44,10 +44,10 @@ class JadwalDokter(JadwalDokterBase):
 # Janji Temu
 class JanjiTemuBase(BaseModel):
     kode_janji_temu: str
-    tgl_janji_temu: str
+    tgl_janji_temu: date
     id_dokter: int
     id_user: int
-    is_relasi: bool
+    is_relasi: int
     id_relasi: int
     biaya_janji_temu: int
 

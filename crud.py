@@ -43,6 +43,9 @@ def get_jadwal_dokter(db: Session, skip: int = 0, limit: int = 100):
 
 def get_jadwal_dokter_by_id(db: Session, id_dokter: int):
     return db.query(models.JadwalDokter).filter(models.JadwalDokter.id_dokter == id_dokter).all()
+
+def get_janji_temu(db: Session, id_user: int):
+    return db.query(models.JanjiTemu).filter(models.JanjiTemu.id_user == id_user).all()
 # delete semua user
 # def delete_all_user(db: Session):
 #     jum_rec = db.query(models.User).delete()
