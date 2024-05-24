@@ -30,7 +30,7 @@ def get_dokter_by_id(db: Session, id_dokter: int):
     return db.query(models.Dokter).filter(models.Dokter.id_dokter == id_dokter).first()
 
 def get_obat(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.Obat).join(models.JenisObat).offset(skip).limit(limit).all()
+    return db.query(models.Obat).offset(skip).limit(limit).all()
 
 def get_obat_by_id(db: Session, id_obat: int):
     return db.query(models.Obat).join(models.JenisObat).filter(models.Obat.id_obat == id_obat).first()

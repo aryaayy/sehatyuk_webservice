@@ -40,51 +40,6 @@ class JadwalDokter(JadwalDokterBase):
     class Config:
         orm_mode = True
 
-
-# Janji Temu
-class JanjiTemuBase(BaseModel):
-    kode_janji_temu: str
-    tgl_janji_temu: date
-    id_dokter: int
-    id_user: int
-    is_relasi: int
-    id_relasi: int
-    biaya_janji_temu: int
-
-class JanjiTemuCreate(JanjiTemuBase):
-    pass
-
-class JanjiTemu(JanjiTemuBase):
-    id_janji_temu: int
-
-    class Config:
-        orm_mode = True
-
-
-# Janji Temu as Orang Lain
-class JanjiTemuAsOrangLainBase(BaseModel):
-    kode_janji_temu_as_orang_lain: str
-    tgl_janji_temu_as_orang_lain: str
-    id_dokter: int
-    id_user: int
-    biaya_janji_temu_as_orang_lain: int
-    nama_lengkap_orang_lain: str
-    no_bpjs_orang_lain: str
-    tgl_lahir_orang_lain: str
-    gender_orang_lain: str
-    no_telp_orang_lain: str
-    alamat_orang_lain: str
-
-class JanjiTemuAsOrangLainCreate(JanjiTemuAsOrangLainBase):
-    pass
-
-class JanjiTemuAsOrangLain(JanjiTemuAsOrangLainBase):
-    id_janji_temu_as_orang_lain: int
-
-    class Config:
-        orm_mode = True
-
-
 # Jenis Obat
 class JenisObatBase(BaseModel):
     jenis_obat: str
@@ -109,6 +64,7 @@ class ObatBase(BaseModel):
     efek_samping_obat: str
     foto_obat: str
     id_jenis_obat: int
+    jenis_obat: Optional[JenisObat] = []
 
 class ObatCreate(ObatBase):
     pass
@@ -196,6 +152,52 @@ class UserLoginPhone(BaseModel):
 
 class User(UserBase):
     id_user: int
+
+    class Config:
+        orm_mode = True
+
+
+# Janji Temu
+class JanjiTemuBase(BaseModel):
+    kode_janji_temu: str
+    tgl_janji_temu: date
+    id_dokter: int
+    id_user: int
+    is_relasi: int
+    id_relasi: int
+    biaya_janji_temu: int
+    dokter: Optional[Dokter] = []
+    user: Optional[User] = []
+
+class JanjiTemuCreate(JanjiTemuBase):
+    pass
+
+class JanjiTemu(JanjiTemuBase):
+    id_janji_temu: int
+
+    class Config:
+        orm_mode = True
+
+
+# Janji Temu as Orang Lain
+class JanjiTemuAsOrangLainBase(BaseModel):
+    kode_janji_temu_as_orang_lain: str
+    tgl_janji_temu_as_orang_lain: str
+    id_dokter: int
+    id_user: int
+    biaya_janji_temu_as_orang_lain: int
+    nama_lengkap_orang_lain: str
+    no_bpjs_orang_lain: str
+    tgl_lahir_orang_lain: str
+    gender_orang_lain: str
+    no_telp_orang_lain: str
+    alamat_orang_lain: str
+
+class JanjiTemuAsOrangLainCreate(JanjiTemuAsOrangLainBase):
+    pass
+
+class JanjiTemuAsOrangLain(JanjiTemuAsOrangLainBase):
+    id_janji_temu_as_orang_lain: int
 
     class Config:
         orm_mode = True

@@ -19,6 +19,7 @@ class Dokter(BaseDB):
     foto_dokter = Column(String(512), nullable=False)
     rating_dokter = Column(Float, nullable=False)
     id_poli = Column(Integer, ForeignKey('poli.id_poli'), nullable=False)
+    janji_temu = relationship("JanjiTemu",back_populates="dokter");
 
 class JadwalDokter(BaseDB):
     __tablename__ = 'jadwal_dokter'
@@ -39,6 +40,8 @@ class JanjiTemu(BaseDB):
     is_relasi = Column(Boolean, nullable=False)
     id_relasi = Column(Integer, nullable=False)
     biaya_janji_temu = Column(Integer, nullable=False)
+    dokter = relationship("Dokter",back_populates="janji_temu")
+    user = relationship("User", back_populates="janji_temu")
 
 class JanjiTemuAsOrangLain(BaseDB):
     __tablename__ = 'janji_temu_as_orang_lain'
@@ -61,6 +64,7 @@ class JenisObat(BaseDB):
 
     id_jenis_obat = Column(Integer, primary_key=True, index=True)
     jenis_obat = Column(String(16), nullable=False)
+    obat = relationship("Obat",back_populates="jenis_obat")
 
 class Obat(BaseDB):
     __tablename__ = 'obat'
@@ -74,6 +78,7 @@ class Obat(BaseDB):
     efek_samping_obat = Column(Text, nullable=False)
     foto_obat = Column(String(255), nullable=False)
     id_jenis_obat = Column(Integer, ForeignKey('jenis_obat.id_jenis_obat'), nullable=False)
+    jenis_obat = relationship("JenisObat",back_populates="obat")
 
 class Poli(BaseDB):
     __tablename__ = 'poli'
@@ -117,3 +122,4 @@ class User(BaseDB):
     email_user = Column(String(127), nullable=False)
     password_user = Column(String(128), nullable=False)
     foto_user = Column(String(512), nullable=False)
+    janji_temu = relationship("JanjiTemu", back_populates="user")
