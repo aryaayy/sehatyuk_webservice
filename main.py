@@ -308,6 +308,21 @@ def read_janji_temu_id(id_janji_temu:int, db: Session = Depends(get_db),token: s
     janji_temu = crud.get_janji_temu_by_id(db, id_janji_temu=id_janji_temu)
     return janji_temu
 
+#ambil semua pengingat obat
+@app.get("/get_pengingat_minum_obat/", response_model=list[schemas.PengingatMinumObat])
+def read_pengingat_minum_obat(db: Session = Depends(get_db), skip: int = 0, limit: int = 100, token: str = Depends(oauth2_scheme)):
+    usr =  verify_token(token)
+    pengingat_minum_obat = crud.get_pengingat_minum_obat(db, skip, limit)
+    return pengingat_minum_obat
+
+#ambil isi pengingat
+@app.get("/get_pengingat_minum_obat_by_id/{id_pengingat}", response_model=schemas.PengingatMinumObat)
+def read_pengingat_minum_obat(id_pengingat:int, db: Session = Depends(get_db),token: str = Depends(oauth2_scheme)):
+    usr =  verify_token(token)
+    # print(usr)
+    pengingat_minum_obat = crud.get_pengingat_minum_obat_by_id(db, id_pengingat=id_pengingat)
+    return pengingat_minum_obat
+
 # # hapus item cart berdasarkan user id
 # @app.delete("/clear_whole_carts_by_userid/{user_id}")
 # def delete_item_user_cart(user_id:int,db: Session = Depends(get_db),token: str = Depends(oauth2_scheme) ):

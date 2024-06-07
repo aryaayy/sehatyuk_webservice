@@ -206,3 +206,24 @@ class JanjiTemuAsOrangLain(JanjiTemuAsOrangLainBase):
 class Token(BaseModel):
     access_token: str
     token_type: str
+
+# Pengingat Minum Obat
+class PengingatMinumObatBase(BaseModel):
+    id_obat: int
+    dosis: int
+    sendok: str
+    jadwal: str
+    aturan: str
+    namaObat: Optional[Obat] = []
+    fotoObat: Optional[Obat] = []
+
+class PengingatMinumObatCreate(PengingatMinumObatBase):
+    pass
+
+class PengingatMinumObat(PengingatMinumObatBase):
+    id_pengingat: int
+    # obat: Optional[Obat] = []
+
+    class Config:
+        orm_mode = True
+        

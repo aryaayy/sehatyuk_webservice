@@ -29,6 +29,17 @@ class JadwalDokter(BaseDB):
     tanggal_jadwal_dokter = Column(Date, nullable=False)
     is_full = Column(Integer, nullable=False)
 
+class PengingatMinumObat(BaseDB):
+    __tablename__ = 'pengingat_minum_obat'
+
+    id_pengingat = Column(Integer, primary_key=True, index=True)
+    id_obat = Column(Integer, ForeignKey('obat.id_obat'), nullable=False)
+    dosis = Column(Integer, nullable=False)
+    sendok = Column(String(50), nullable=False)
+    jadwal = Column(String(50), nullable=False)
+    aturan = Column(String(255), nullable=False)
+    namaObat = relationship("Obat", back_populates="pengingat_minum_obat")
+
 class JanjiTemu(BaseDB):
     __tablename__ = 'janji_temu'
 

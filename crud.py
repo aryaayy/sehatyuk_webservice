@@ -49,6 +49,12 @@ def get_janji_temu(db: Session, id_user: int):
 
 def get_janji_temu_by_id(db: Session, id_janji_temu: int):
     return db.query(models.JanjiTemu).filter(models.JanjiTemu.id_janji_temu == id_janji_temu).first()
+
+def get_pengingat_minum_obat(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.PengingatMinumObat).offset(skip).limit(limit).all()
+
+def get_pengingat_minum_obat_by_id(db: Session, id_pengingat: int):
+    return db.query(models.PengingatMinumObat).filter(models.PengingatMinumObat.id_pengingat == id_pengingat).first()
 # delete semua user
 # def delete_all_user(db: Session):
 #     jum_rec = db.query(models.User).delete()
