@@ -56,25 +56,23 @@ class JanjiTemu(BaseDB):
     is_relasi = Column(Boolean, nullable=False)
     id_relasi = Column(Integer, ForeignKey('relasi.id_relasi'), nullable=False)
     biaya_janji_temu = Column(Integer, nullable=False)
+    id_janji_temu_as_orang_lain = Column(Integer, ForeignKey('janji_temu_as_orang_lain.id_janji_temu_as_orang_lain'), nullable=False)
     dokter = relationship("Dokter",back_populates="janji_temu")
     user = relationship("User", back_populates="janji_temu")
     relasi = relationship("Relasi", back_populates="janji_temu")
+    janji_temu_as_orang_lain = relationship("JanjiTemuAsOrangLain", back_populates="janji_temu")
 
 class JanjiTemuAsOrangLain(BaseDB):
     __tablename__ = 'janji_temu_as_orang_lain'
 
     id_janji_temu_as_orang_lain = Column(Integer, primary_key=True, index=True)
-    kode_janji_temu_as_orang_lain = Column(String(255), nullable=False)
-    tgl_janji_temu_as_orang_lain = Column(Date, nullable=False)
-    id_dokter = Column(Integer, ForeignKey('dokter.id_dokter'), nullable=False)
-    id_user = Column(Integer, ForeignKey('user.id_user'), nullable=False)
-    biaya_janji_temu_as_orang_lain = Column(Integer, nullable=False)
     nama_lengkap_orang_lain = Column(String(127), nullable=False)
     no_bpjs_orang_lain = Column(String(18), nullable=False)
     tgl_lahir_orang_lain = Column(Date, nullable=False)
     gender_orang_lain = Column(String(1), nullable=False)
     no_telp_orang_lain = Column(String(18), nullable=False)
     alamat_orang_lain = Column(String(255), nullable=False)
+    janji_temu = relationship("JanjiTemu", back_populates="janji_temu_as_orang_lain")
 
 class JenisObat(BaseDB):
     __tablename__ = 'jenis_obat'

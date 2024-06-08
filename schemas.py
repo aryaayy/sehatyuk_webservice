@@ -157,40 +157,11 @@ class User(UserBase):
     class Config:
         orm_mode = True
 
-
-# Janji Temu
-class JanjiTemuBase(BaseModel):
-    kode_janji_temu: str
-    tgl_janji_temu: date
-    id_dokter: int
-    id_user: int
-    is_relasi: int
-    id_relasi: int
-    biaya_janji_temu: int
-    dokter: Optional[Dokter] = []
-    user: Optional[User] = []
-    relasi: Optional[Relasi] = []
-
-class JanjiTemuCreate(JanjiTemuBase):
-    pass
-
-class JanjiTemu(JanjiTemuBase):
-    id_janji_temu: int
-
-    class Config:
-        orm_mode = True
-
-
 # Janji Temu as Orang Lain
 class JanjiTemuAsOrangLainBase(BaseModel):
-    kode_janji_temu_as_orang_lain: str
-    tgl_janji_temu_as_orang_lain: str
-    id_dokter: int
-    id_user: int
-    biaya_janji_temu_as_orang_lain: int
     nama_lengkap_orang_lain: str
     no_bpjs_orang_lain: str
-    tgl_lahir_orang_lain: str
+    tgl_lahir_orang_lain: date
     gender_orang_lain: str
     no_telp_orang_lain: str
     alamat_orang_lain: str
@@ -203,6 +174,32 @@ class JanjiTemuAsOrangLain(JanjiTemuAsOrangLainBase):
 
     class Config:
         orm_mode = True
+
+
+# Janji Temu
+class JanjiTemuBase(BaseModel):
+    kode_janji_temu: str
+    tgl_janji_temu: date
+    id_dokter: int
+    id_user: int
+    is_relasi: int
+    id_relasi: int
+    biaya_janji_temu: int
+    id_janji_temu_as_orang_lain: int
+    dokter: Optional[Dokter] = []
+    user: Optional[User] = []
+    relasi: Optional[Relasi] = []
+    janji_temu_as_orang_lain: Optional[JanjiTemuAsOrangLain] = []
+
+class JanjiTemuCreate(JanjiTemuBase):
+    pass
+
+class JanjiTemu(JanjiTemuBase):
+    id_janji_temu: int
+
+    class Config:
+        orm_mode = True
+
 
 # Token
 class Token(BaseModel):

@@ -50,6 +50,9 @@ def get_janji_temu(db: Session, id_user: int):
 def get_janji_temu_by_id(db: Session, id_janji_temu: int):
     return db.query(models.JanjiTemu).filter(models.JanjiTemu.id_janji_temu == id_janji_temu).first()
 
+# def get_janji_temu_as_orang_lain_by_id(db: Session, id_user: int):
+#     return db.query(models.JanjiTemuAsOrangLain).filter(models.JanjiTemuAsOrangLain.id_user == id_user).order_by(models.JanjiTemuAsOrangLain.id_janji_temu_as_orang_lain.desc()).first()
+
 def get_pengingat_minum_obat(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.PengingatMinumObat).join(models.Obat).join(models.User).offset(skip).limit(limit).all()
 
@@ -236,11 +239,27 @@ def create_janji_temu(db: Session, janji_temu: schemas.JanjiTemuCreate):
         is_relasi = janji_temu.is_relasi,
         id_relasi = janji_temu.id_relasi,
         biaya_janji_temu = janji_temu.biaya_janji_temu,
+        id_janji_temu_as_orang_lain = janji_temu.id_janji_temu_as_orang_lain,
     )
     db.add(db_janji_temu)
     db.commit()
     db.refresh(db_janji_temu)
     return db_janji_temu
+
+## janji_temu
+def create_janji_temu_as_orang_lain(db: Session, janji_temu_as_orang_lain: schemas.JanjiTemuAsOrangLainCreate):
+    db_janji_temu_as_orang_lain = models.JanjiTemuAsOrangLain(
+        nama_lengkap_orang_lain = janji_temu_as_orang_lain.nama_lengkap_orang_lain,
+        no_bpjs_orang_lain = janji_temu_as_orang_lain.no_bpjs_orang_lain,
+        tgl_lahir_orang_lain = janji_temu_as_orang_lain.tgl_lahir_orang_lain,
+        gender_orang_lain = janji_temu_as_orang_lain.gender_orang_lain,
+        no_telp_orang_lain = janji_temu_as_orang_lain.no_telp_orang_lain,
+        alamat_orang_lain = janji_temu_as_orang_lain.alamat_orang_lain,
+    )
+    db.add(db_janji_temu_as_orang_lain)
+    db.commit()
+    db.refresh(db_janji_temu_as_orang_lain)
+    return db_janji_temu_as_orang_lain
 
 # ##==================== item
 
