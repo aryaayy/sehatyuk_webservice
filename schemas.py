@@ -3,6 +3,19 @@ from datetime import date
 from typing import List, Optional
 
 
+# Poli
+class PoliBase(BaseModel):
+    nama_poli: str
+
+class PoliCreate(PoliBase):
+    pass
+
+class Poli(PoliBase):
+    id_poli: int
+
+    class Config:
+        orm_mode = True
+
 # Dokter
 class DokterBase(BaseModel):
     nama_lengkap_dokter: str
@@ -14,6 +27,7 @@ class DokterBase(BaseModel):
     foto_dokter: str
     rating_dokter: float
     id_poli: int
+    poli: Optional[Poli] = []
 
 class DokterCreate(DokterBase):
     pass
@@ -75,19 +89,6 @@ class Obat(ObatBase):
     class Config:
         orm_mode = True
 
-
-# Poli
-class PoliBase(BaseModel):
-    nama_poli: str
-
-class PoliCreate(PoliBase):
-    pass
-
-class Poli(PoliBase):
-    id_poli: int
-
-    class Config:
-        orm_mode = True
 
 
 # Relasi
@@ -168,6 +169,7 @@ class JanjiTemuBase(BaseModel):
     biaya_janji_temu: int
     dokter: Optional[Dokter] = []
     user: Optional[User] = []
+    relasi: Optional[Relasi] = []
 
 class JanjiTemuCreate(JanjiTemuBase):
     pass

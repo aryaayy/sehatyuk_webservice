@@ -45,7 +45,7 @@ def get_jadwal_dokter_by_id(db: Session, id_dokter: int):
     return db.query(models.JadwalDokter).filter(models.JadwalDokter.id_dokter == id_dokter).all()
 
 def get_janji_temu(db: Session, id_user: int):
-    return db.query(models.JanjiTemu).filter(models.JanjiTemu.id_user == id_user).all()
+    return db.query(models.JanjiTemu).filter(models.JanjiTemu.id_user == id_user).order_by(models.JanjiTemu.tgl_janji_temu).all()
 
 def get_janji_temu_by_id(db: Session, id_janji_temu: int):
     return db.query(models.JanjiTemu).filter(models.JanjiTemu.id_janji_temu == id_janji_temu).first()

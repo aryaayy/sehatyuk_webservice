@@ -19,7 +19,8 @@ class Dokter(BaseDB):
     foto_dokter = Column(String(512), nullable=False)
     rating_dokter = Column(Float, nullable=False)
     id_poli = Column(Integer, ForeignKey('poli.id_poli'), nullable=False)
-    janji_temu = relationship("JanjiTemu",back_populates="dokter");
+    janji_temu = relationship("JanjiTemu",back_populates="dokter")
+    poli = relationship("Poli", back_populates="dokter")
 
 class JadwalDokter(BaseDB):
     __tablename__ = 'jadwal_dokter'
@@ -38,10 +39,11 @@ class JanjiTemu(BaseDB):
     id_dokter = Column(Integer, ForeignKey('dokter.id_dokter'), nullable=False)
     id_user = Column(Integer, ForeignKey('user.id_user'), nullable=False)
     is_relasi = Column(Boolean, nullable=False)
-    id_relasi = Column(Integer, nullable=False)
+    id_relasi = Column(Integer, ForeignKey('relasi.id_relasi'), nullable=False)
     biaya_janji_temu = Column(Integer, nullable=False)
     dokter = relationship("Dokter",back_populates="janji_temu")
     user = relationship("User", back_populates="janji_temu")
+    relasi = relationship("Relasi", back_populates="janji_temu")
 
 class JanjiTemuAsOrangLain(BaseDB):
     __tablename__ = 'janji_temu_as_orang_lain'
@@ -97,6 +99,7 @@ class Poli(BaseDB):
 
     id_poli = Column(Integer, primary_key=True, index=True)
     nama_poli = Column(String(16), nullable=False)
+    dokter = relationship("Dokter", back_populates="poli")
 
 class Relasi(BaseDB):
     __tablename__ = 'relasi'
@@ -111,6 +114,7 @@ class Relasi(BaseDB):
     alamat_relasi = Column(String(128), nullable=False)
     foto_relasi = Column(String(255), nullable=False)
     tipe_relasi = Column(String(16), nullable=False)
+    janji_temu = relationship("JanjiTemu", back_populates="relasi")
 
 class Review(BaseDB):
     __tablename__ = 'review'
