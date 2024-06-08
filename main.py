@@ -321,6 +321,11 @@ def read_janji_temu_as_orang_lain_id(id_user:int, db: Session = Depends(get_db),
     janji_temu_as_orang_lain = crud.get_janji_temu_as_orang_lain_by_id(db, id_user=id_user)
     return janji_temu_as_orang_lain
 
+@app.delete("/delete_janji_temu/{id_janji_temu}")
+def delete_janji_temu(id_janji_temu:int,db: Session = Depends(get_db),token: str = Depends(oauth2_scheme) ):
+    usr =  verify_token(token) #bisa digunakan untuk mengecek apakah user cocok (tdk boleh akses data user lain)
+    return crud.delete_janji_temu_by_id(db,id_janji_temu)
+
 #ambil semua pengingat obat
 @app.get("/get_pengingat_minum_obat/{id_user}", response_model=list[schemas.PengingatMinumObat])
 def read_pengingat_minum_obat(id_user:int, db: Session = Depends(get_db),token: str = Depends(oauth2_scheme)):

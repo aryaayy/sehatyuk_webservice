@@ -261,6 +261,11 @@ def create_janji_temu_as_orang_lain(db: Session, janji_temu_as_orang_lain: schem
     db.refresh(db_janji_temu_as_orang_lain)
     return db_janji_temu_as_orang_lain
 
+def delete_janji_temu_by_id(db: Session, id_janji_temu: int):
+    hasil = db.query(models.JanjiTemu).filter(models.JanjiTemu.id_janji_temu == id_janji_temu).delete()
+    db.commit()
+    return {"record_dihapus":hasil} 
+
 # ##==================== item
 
 # # ambil semua item
