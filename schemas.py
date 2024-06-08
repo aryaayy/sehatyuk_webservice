@@ -210,12 +210,14 @@ class Token(BaseModel):
 # Pengingat Minum Obat
 class PengingatMinumObatBase(BaseModel):
     id_obat: int
+    id_user: int
     dosis: int
     sendok: str
     jadwal: str
     aturan: str
-    namaObat: Optional[Obat] = []
-    fotoObat: Optional[Obat] = []
+    obat: Optional[Obat] = []
+    # nama_obat: Optional[Obat] = []
+    # foto_obat: Optional[Obat] = []
 
 class PengingatMinumObatCreate(PengingatMinumObatBase):
     pass
