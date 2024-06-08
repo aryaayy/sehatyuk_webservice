@@ -218,10 +218,10 @@ class PengingatMinumObatBase(BaseModel):
     jadwal: str
     aturan: str
     obat: Optional[Obat] = []
+    user: Optional[User] = [] 
     # nama_obat: Optional[Obat] = []
     # foto_obat: Optional[Obat] = []
-    detail_obat: Optional[Obat] = []
-    detail_user: Optional[User] = [] 
+    # detail_obat: Optional[Obat] = []
 
 class PengingatMinumObatCreate(PengingatMinumObatBase):
     pass

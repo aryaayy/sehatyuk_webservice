@@ -35,6 +35,7 @@ class PengingatMinumObat(BaseDB):
 
     id_pengingat = Column(Integer, primary_key=True, index=True)
     id_obat = Column(Integer, ForeignKey('obat.id_obat'), nullable=False)
+    id_user = Column(Integer, ForeignKey('user.id_user'), nullable=False)
     dosis = Column(Integer, nullable=False)
     sendok = Column(String(50), nullable=False)
     jadwal = Column(String(50), nullable=False)
@@ -142,4 +143,4 @@ class User(BaseDB):
     password_user = Column(String(128), nullable=False)
     foto_user = Column(String(512), nullable=False)
     janji_temu = relationship("JanjiTemu", back_populates="user")
-    pengingat_minum_obat = relationship("PengingatMinumObat", back_populates="detail_user")
+    pengingat_minum_obat = relationship("PengingatMinumObat", back_populates="user")
