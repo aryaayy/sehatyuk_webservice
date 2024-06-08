@@ -138,3 +138,4 @@ class User(BaseDB):
     password_user = Column(String(128), nullable=False)
     foto_user = Column(String(512), nullable=False)
     janji_temu = relationship("JanjiTemu", back_populates="user")
+    pengingat_minum_obat = relationship("PengingatMinumObat", back_populates="detail_user")

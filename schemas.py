@@ -219,6 +219,7 @@ class PengingatMinumObatBase(BaseModel):
     # nama_obat: Optional[Obat] = []
     # foto_obat: Optional[Obat] = []
     detail_obat: Optional[Obat] = []
+    detail_user: Optional[User] = [] 
 
 class PengingatMinumObatCreate(PengingatMinumObatBase):
     pass
