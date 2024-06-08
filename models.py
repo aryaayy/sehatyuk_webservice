@@ -30,6 +30,20 @@ class JadwalDokter(BaseDB):
     tanggal_jadwal_dokter = Column(Date, nullable=False)
     is_full = Column(Integer, nullable=False)
 
+class PengingatMinumObat(BaseDB):
+    __tablename__ = 'pengingat_minum_obat'
+
+    id_pengingat = Column(Integer, primary_key=True, index=True)
+    id_obat = Column(Integer, ForeignKey('obat.id_obat'), nullable=False)
+    dosis = Column(Integer, nullable=False)
+    sendok = Column(String(50), nullable=False)
+    jadwal = Column(String(50), nullable=False)
+    aturan = Column(String(255), nullable=False)
+    obat = relationship("Obat", back_populates="pengingat_minum_obat")
+    user = relationship("User", back_populates="pengingat_minum_obat")
+    # nama_obat = relationship("Obat", back_populates="pengingat_minum_obat")
+    # foto_obat = relationship("Obat", back_populates="pengingat_minum_obat")
+
 class JanjiTemu(BaseDB):
     __tablename__ = 'janji_temu'
 
@@ -81,18 +95,7 @@ class Obat(BaseDB):
     foto_obat = Column(String(255), nullable=False)
     id_jenis_obat = Column(Integer, ForeignKey('jenis_obat.id_jenis_obat'), nullable=False)
     jenis_obat = relationship("JenisObat",back_populates="obat")
-    pengingat_minum_obat = relationship("PengingatMinumObat", back_populates="detail_obat")
-
-class PengingatMinumObat(BaseDB):
-    __tablename__ = 'pengingat_minum_obat'
-
-    id_pengingat = Column(Integer, primary_key=True, index=True)
-    id_obat = Column(Integer, ForeignKey('obat.id_obat'), nullable=False)
-    dosis = Column(Integer, nullable=False)
-    sendok = Column(String(50), nullable=False)
-    jadwal = Column(String(50), nullable=False)
-    aturan = Column(String(255), nullable=False)
-    detail_obat = relationship("Obat", back_populates="pengingat_minum_obat")
+    pengingat_minum_obat = relationship("PengingatMinumObat", back_populates="obat")
 
 class Poli(BaseDB):
     __tablename__ = 'poli'
@@ -139,3 +142,4 @@ class User(BaseDB):
     password_user = Column(String(128), nullable=False)
     foto_user = Column(String(512), nullable=False)
     janji_temu = relationship("JanjiTemu", back_populates="user")
+    pengingat_minum_obat = relationship("PengingatMinumObat", back_populates="detail_user")
