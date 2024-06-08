@@ -214,8 +214,7 @@ class PengingatMinumObatBase(BaseModel):
     sendok: str
     jadwal: str
     aturan: str
-    namaObat: Optional[Obat] = []
-    fotoObat: Optional[Obat] = []
+    detail_obat: Optional[Obat] = []
 
 class PengingatMinumObatCreate(PengingatMinumObatBase):
     pass
