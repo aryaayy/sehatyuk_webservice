@@ -309,10 +309,11 @@ def read_janji_temu_id(id_janji_temu:int, db: Session = Depends(get_db),token: s
     return janji_temu
 
 #ambil semua pengingat obat
-@app.get("/get_pengingat_minum_obat/", response_model=list[schemas.PengingatMinumObat])
-def read_pengingat_minum_obat(db: Session = Depends(get_db), skip: int = 0, limit: int = 100, token: str = Depends(oauth2_scheme)):
-    usr =  verify_token(token)
-    pengingat_minum_obat = crud.get_pengingat_minum_obat(db, skip, limit)
+@app.get("/get_pengingat_minum_obat/{id_user}", response_model=list[schemas.PengingatMinumObat])
+def read_pengingat_minum_obat(id_user:int, db: Session = Depends(get_db),token: str = Depends(oauth2_scheme)):
+    usr =  verify_token(token) #bisa digunakan untuk mengecek apakah user cocok (tdk boleh akses data user lain)
+    # print(usr)
+    pengingat_minum_obat = crud.get_pengingat_minum_obat(db, id_user=id_user)
     return pengingat_minum_obat
 
 #ambil isi pengingat
