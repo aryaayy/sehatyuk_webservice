@@ -1,5 +1,5 @@
 from database import BaseDB
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Date, Float, Text, Enum
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Date, Float, Text, Enum, Time
 from sqlalchemy.orm import relationship
 from enum import Enum as PyEnum
 # from sqlalchemy.orm import Mapped
@@ -30,6 +30,8 @@ class JadwalDokter(BaseDB):
     id_dokter = Column(Integer, ForeignKey('dokter.id_dokter'), nullable=False)
     tanggal_jadwal_dokter = Column(Date, nullable=False)
     is_full = Column(Integer, nullable=False)
+    start_time = Column(Time, nullable=False)
+    end_time = Column(Time, nullable=False)
 
 class PengingatMinumObat(BaseDB):
     __tablename__ = 'pengingat_minum_obat'

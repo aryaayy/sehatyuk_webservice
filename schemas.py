@@ -1,7 +1,7 @@
 from pydantic import BaseModel
-from datetime import date
+from datetime import date, time
 from typing import List, Optional, Literal
-
+from enum import Enum
 
 # Poli
 class PoliBase(BaseModel):
@@ -44,6 +44,8 @@ class JadwalDokterBase(BaseModel):
     id_dokter: int
     tanggal_jadwal_dokter: date
     is_full: int
+    start_time: time
+    end_time: time
 
 class JadwalDokterCreate(JadwalDokterBase):
     pass
@@ -175,6 +177,12 @@ class JanjiTemuAsOrangLain(JanjiTemuAsOrangLainBase):
     class Config:
         orm_mode = True
 
+class StatusEnum(str, Enum):
+    MENUNGGU_AMBIL_ANTRIAN = 'Menunggu Ambil Antrian'
+    MENUNGGU_ANTRIAN = 'Menunggu Antrian'
+    MENUNGGU_SESI = 'Menunggu Sesi'
+    MENUNGGU_PEMBAYARAN = 'Menunggu Pembayaran'
+    SELESAI = 'Selesai'
 
 # Janji Temu
 class JanjiTemuBase(BaseModel):
@@ -186,13 +194,7 @@ class JanjiTemuBase(BaseModel):
     id_relasi: int
     biaya_janji_temu: int
     id_janji_temu_as_orang_lain: int
-    status: Literal[
-        'Menunggu Ambil Antrian',
-        'Menunggu Antrian',
-        'Menunggu Sesi',
-        'Menunggu Pembayaran',
-        'Selesai'
-    ]
+    status: StatusEnum
     dokter: Optional[Dokter] = []
     user: Optional[User] = []
     relasi: Optional[Relasi] = []
