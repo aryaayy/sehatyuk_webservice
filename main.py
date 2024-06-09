@@ -348,6 +348,12 @@ def read_pengingat_minum_obat(id_pengingat:int, db: Session = Depends(get_db),to
     pengingat_minum_obat = crud.get_pengingat_minum_obat_by_id(db, id_pengingat=id_pengingat)
     return pengingat_minum_obat
 
+@app.post("/create_pengingat_minum_obat/", response_model=schemas.PengingatMinumObat ) # response_model=schemas.Cart 
+def create_pengingat_minum_obat(
+    pengingat_minum_obat: schemas.PengingatMinumObatCreate, db: Session = Depends(get_db),token: str = Depends(oauth2_scheme)):
+    usr =  verify_token(token) 
+    return crud.create_pengingat_minum_obat(db=db, pengingat_minum_obat=pengingat_minum_obat)
+
 # # hapus item cart berdasarkan user id
 # @app.delete("/clear_whole_carts_by_userid/{user_id}")
 # def delete_item_user_cart(user_id:int,db: Session = Depends(get_db),token: str = Depends(oauth2_scheme) ):
