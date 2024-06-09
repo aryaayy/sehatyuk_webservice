@@ -376,6 +376,12 @@ def read_pengingat_minum_obat(id_pengingat:int, db: Session = Depends(get_db),to
     pengingat_minum_obat = crud.get_pengingat_minum_obat_by_id(db, id_pengingat=id_pengingat)
     return pengingat_minum_obat
 
+@app.post("/create_pengingat_minum_obat/", response_model=schemas.PengingatMinumObat ) # response_model=schemas.Cart 
+def create_pengingat_minum_obat(
+    pengingat_minum_obat: schemas.PengingatMinumObatCreate, db: Session = Depends(get_db),token: str = Depends(oauth2_scheme)):
+    usr =  verify_token(token) 
+    return crud.create_pengingat_minum_obat(db=db, pengingat_minum_obat=pengingat_minum_obat)
+
 # # hapus item cart berdasarkan user id
 # @app.delete("/clear_whole_carts_by_userid/{user_id}")
 # def delete_item_user_cart(user_id:int,db: Session = Depends(get_db),token: str = Depends(oauth2_scheme) ):
@@ -452,6 +458,24 @@ def read_image(id_obat:int,  db: Session = Depends(get_db),token: str = Depends(
     
     fr =  FileResponse(path_img + "cariObatPage/" + nama_image)
     return fr   
+
+# get rekam_medis by id
+@app.get("/rekam_medis/{rekam_medis_id}", response_model=schemas.RekamMedis)
+def read_rekam_medis_by_id(rekam_medis_id: int, token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    usr = verify_token(token)
+    db_rekam_medis = crud.get_rekam_medis_by_id(db, rekam_medis_id=rekam_medis_id)
+    if db_rekam_medis is None:
+        raise HTTPException(status_code=404, detail="Rekam Medis not found")
+    return db_rekam_medis
+
+# get rekam_medis by user id
+@app.get("/rekam_medis/user/{user_id}/selesai", response_model=list[schemas.RekamMedis])
+def read_rekam_medis_selesai_by_user(user_id: int, token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    usr = verify_token(token)
+    rekam_medis_list = crud.get_rekam_medis_selesai_by_user(db, user_id=user_id)
+    if not rekam_medis_list:
+        raise HTTPException(status_code=404, detail="No Rekam Medis found with status 'Selesai'")
+    return rekam_medis_list
 
 # # cari item berdasarkan deskripsi
 # @app.get("/search_items/{keyword}")

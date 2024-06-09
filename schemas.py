@@ -1,7 +1,7 @@
 from pydantic import BaseModel
-from datetime import date
+from datetime import date, time
 from typing import List, Optional, Literal
-
+from enum import Enum
 
 class ResponseMSG(BaseModel):
     msg: str
@@ -47,6 +47,8 @@ class JadwalDokterBase(BaseModel):
     id_dokter: int
     tanggal_jadwal_dokter: date
     is_full: int
+    start_time: time
+    end_time: time
 
 class JadwalDokterCreate(JadwalDokterBase):
     pass
@@ -182,6 +184,12 @@ class JanjiTemuAsOrangLain(JanjiTemuAsOrangLainBase):
     class Config:
         orm_mode = True
 
+class StatusEnum(str, Enum):
+    MENUNGGU_AMBIL_ANTRIAN = 'Menunggu Ambil Antrian'
+    MENUNGGU_ANTRIAN = 'Menunggu Antrian'
+    MENUNGGU_SESI = 'Menunggu Sesi'
+    MENUNGGU_PEMBAYARAN = 'Menunggu Pembayaran'
+    SELESAI = 'Selesai'
 
 # Janji Temu
 class JanjiTemuBase(BaseModel):
@@ -193,13 +201,7 @@ class JanjiTemuBase(BaseModel):
     id_relasi: int
     biaya_janji_temu: int
     id_janji_temu_as_orang_lain: int
-    status: Literal[
-        'Menunggu Ambil Antrian',
-        'Menunggu Antrian',
-        'Menunggu Sesi',
-        'Menunggu Pembayaran',
-        'Selesai'
-    ]
+    status: StatusEnum
     dokter: Optional[Dokter] = []
     user: Optional[User] = []
     relasi: Optional[Relasi] = []
@@ -244,3 +246,19 @@ class PengingatMinumObat(PengingatMinumObatBase):
     class Config:
         orm_mode = True
         
+        
+# rekam medis
+class RekamMedisBase(BaseModel):
+    id_user: int
+    id_janji_temu: int
+    id_dokter: int
+    hasil_diagnosis: str
+    pengobatan: str
+    obat: str
+    catatan: str
+
+class RekamMedis(RekamMedisBase):
+    id_rekam_medis: int
+
+    class Config:
+        orm_mode = True

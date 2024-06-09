@@ -1,5 +1,5 @@
 from database import BaseDB
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Date, Float, Text, Enum
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Date, Float, Text, Enum, Time
 from sqlalchemy.orm import relationship
 from enum import Enum as PyEnum
 # from sqlalchemy.orm import Mapped
@@ -22,6 +22,7 @@ class Dokter(BaseDB):
     id_poli = Column(Integer, ForeignKey('poli.id_poli'), nullable=False)
     janji_temu = relationship("JanjiTemu",back_populates="dokter")
     poli = relationship("Poli", back_populates="dokter")
+    rekam_medis = relationship("RekamMedis", back_populates="dokter")
 
 class JadwalDokter(BaseDB):
     __tablename__ = 'jadwal_dokter'
@@ -30,6 +31,8 @@ class JadwalDokter(BaseDB):
     id_dokter = Column(Integer, ForeignKey('dokter.id_dokter'), nullable=False)
     tanggal_jadwal_dokter = Column(Date, nullable=False)
     is_full = Column(Integer, nullable=False)
+    start_time = Column(Time, nullable=False)
+    end_time = Column(Time, nullable=False)
 
 class PengingatMinumObat(BaseDB):
     __tablename__ = 'pengingat_minum_obat'
@@ -70,6 +73,7 @@ class JanjiTemu(BaseDB):
     user = relationship("User", back_populates="janji_temu")
     relasi = relationship("Relasi", back_populates="janji_temu")
     janji_temu_as_orang_lain = relationship("JanjiTemuAsOrangLain", back_populates="janji_temu")
+    rekam_medis = relationship("RekamMedis", back_populates="janji_temu")
 
 class JanjiTemuAsOrangLain(BaseDB):
     __tablename__ = 'janji_temu_as_orang_lain'
@@ -151,3 +155,20 @@ class User(BaseDB):
     foto_user = Column(String(512), nullable=False)
     janji_temu = relationship("JanjiTemu", back_populates="user")
     pengingat_minum_obat = relationship("PengingatMinumObat", back_populates="user")
+    rekam_medis = relationship("RekamMedis", back_populates="user")
+    
+class RekamMedis(BaseDB):
+    __tablename__ = 'rekam_medis'
+    
+    id_rekam_medis = Column(Integer, primary_key=True, index=True)
+    id_user = Column(Integer, ForeignKey('user.id_user'), nullable=False)
+    id_janji_temu = Column(Integer, ForeignKey('janji_temu.id_janji_temu'), nullable=False)
+    id_dokter = Column(Integer, ForeignKey('dokter.id_dokter'), nullable=False)
+    hasil_diagnosis = Column(Text, nullable=False)
+    pengobatan = Column(Text, nullable=False)
+    obat = Column(Text, nullable=False)
+    catatan = Column(Text, nullable=False)
+
+    user = relationship("User", back_populates="rekam_medis")
+    janji_temu = relationship("JanjiTemu", back_populates="rekam_medis")
+    dokter = relationship("Dokter", back_populates="rekam_medis")

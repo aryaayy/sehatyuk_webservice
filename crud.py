@@ -53,8 +53,10 @@ def get_janji_temu_by_id(db: Session, id_janji_temu: int):
 # def alter_status(db: Session, id_janji_temu: int):
 #     return db.query(models.JanjiTemu).filter(models.JanjiTemu.id_janji_temu == id_janji_temu)
 
-def get_pengingat_minum_obat(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.PengingatMinumObat).join(models.Obat).join(models.User).offset(skip).limit(limit).all()
+# def get_pengingat_minum_obat(db: Session, skip: int = 0, limit: int = 100):
+#     return db.query(models.PengingatMinumObat).join(models.Obat).join(models.User).offset(skip).limit(limit).all()
+def get_pengingat_minum_obat(db: Session, id_user: int):
+    return db.query(models.PengingatMinumObat).filter(models.PengingatMinumObat.id_user == id_user).all()
 
 def get_pengingat_minum_obat_by_id(db: Session, id_pengingat: int):
     return db.query(models.PengingatMinumObat).filter(models.PengingatMinumObat.id_pengingat == id_pengingat).first()
@@ -329,6 +331,34 @@ def delete_janji_temu_by_id(db: Session, id_janji_temu: int):
     hasil = db.query(models.JanjiTemu).filter(models.JanjiTemu.id_janji_temu == id_janji_temu).delete()
     db.commit()
     return {"record_dihapus":hasil} 
+
+## pengingat_minum_obat
+def create_pengingat_minum_obat(db: Session, pengingat_minum_obat: schemas.JanjiTemuCreate):
+    db_pengingat_minum_obat = models.JanjiTemu(
+        id_pengingat = pengingat_minum_obat.id_pengingat,
+        id_obat = pengingat_minum_obat.id_obat,
+        id_user = pengingat_minum_obat.id_user,
+        dosis = pengingat_minum_obat.dosis,
+        sendok = pengingat_minum_obat.sendok,
+        jadwal = pengingat_minum_obat.jadwal,
+        aturan = pengingat_minum_obat.aturan,
+        obat = pengingat_minum_obat.obat,
+        user = pengingat_minum_obat.user,
+    )
+    db.add(db_pengingat_minum_obat)
+    db.commit()
+    db.refresh(db_pengingat_minum_obat)
+    return db_pengingat_minum_obat
+
+
+def get_rekam_medis_by_id(db: Session, rekam_medis_id: int):
+    return db.query(models.RekamMedis).filter(models.RekamMedis.id_rekam_medis == rekam_medis_id).first()
+
+def get_rekam_medis_selesai_by_user(db: Session, user_id: int):
+    return db.query(models.RekamMedis).join(models.RekamMedis.janji_temu).filter(
+        models.RekamMedis.id_user == user_id,
+        models.RekamMedis.janji_temu.status == "Selesai"
+    ).all()
 
 # ##==================== item
 
