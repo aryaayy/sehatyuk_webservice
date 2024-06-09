@@ -339,6 +339,16 @@ def create_pengingat_minum_obat(db: Session, pengingat_minum_obat: schemas.Janji
     db.refresh(db_pengingat_minum_obat)
     return db_pengingat_minum_obat
 
+
+def get_rekam_medis_by_id(db: Session, rekam_medis_id: int):
+    return db.query(models.RekamMedis).filter(models.RekamMedis.id_rekam_medis == rekam_medis_id).first()
+
+def get_rekam_medis_selesai_by_user(db: Session, user_id: int):
+    return db.query(models.RekamMedis).join(models.RekamMedis.janji_temu).filter(
+        models.RekamMedis.id_user == user_id,
+        models.RekamMedis.janji_temu.status == "Selesai"
+    ).all()
+
 # ##==================== item
 
 # # ambil semua item
