@@ -254,7 +254,7 @@ class RekamMedisBase(BaseModel):
     pengobatan: str
     obat: str
     catatan: str
-    janjitemu: Optional[JanjiTemu] = []
+    janji_temu: Optional[JanjiTemu] = []
 
 class RekamMedis(RekamMedisBase):
     id_rekam_medis: int
