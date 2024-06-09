@@ -3,6 +3,9 @@ from datetime import date, time
 from typing import List, Optional, Literal
 from enum import Enum
 
+class ResponseMSG(BaseModel):
+    msg: str
+
 # Poli
 class PoliBase(BaseModel):
     nama_poli: str
@@ -159,6 +162,10 @@ class User(UserBase):
     class Config:
         orm_mode = True
 
+class Password(BaseModel):
+    old_password: str
+    new_password: str
+
 # Janji Temu as Orang Lain
 class JanjiTemuAsOrangLainBase(BaseModel):
     nama_lengkap_orang_lain: str
@@ -242,12 +249,12 @@ class PengingatMinumObat(PengingatMinumObatBase):
         
 # rekam medis
 class RekamMedisBase(BaseModel):
-    id_user: int
     id_janji_temu: int
     hasil_diagnosis: str
     pengobatan: str
     obat: str
     catatan: str
+    janjitemu: Optional[JanjiTemu] = []
 
 class RekamMedis(RekamMedisBase):
     id_rekam_medis: int

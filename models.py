@@ -154,18 +154,15 @@ class User(BaseDB):
     foto_user = Column(String(512), nullable=False)
     janji_temu = relationship("JanjiTemu", back_populates="user")
     pengingat_minum_obat = relationship("PengingatMinumObat", back_populates="user")
-    rekam_medis = relationship("RekamMedis", back_populates="user")
     
 class RekamMedis(BaseDB):
     __tablename__ = 'rekam_medis'
     
     id_rekam_medis = Column(Integer, primary_key=True, index=True)
-    id_user = Column(Integer, ForeignKey('user.id_user'), nullable=False)
     id_janji_temu = Column(Integer, ForeignKey('janji_temu.id_janji_temu'), nullable=False)
     hasil_diagnosis = Column(Text, nullable=False)
     pengobatan = Column(Text, nullable=False)
     obat = Column(Text, nullable=False)
     catatan = Column(Text, nullable=False)
-
-    user = relationship("User", back_populates="rekam_medis")
+    
     janji_temu = relationship("JanjiTemu", back_populates="rekam_medis")

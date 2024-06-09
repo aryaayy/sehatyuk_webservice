@@ -179,6 +179,17 @@ def update_user(db: Session, id_user: int, user_update: schemas.UserBase):
     
     return db_user
 
+def update_password(db: Session, id_user: int, newPassword: str):
+    db_user = db.query(models.User).filter(models.User.id_user == id_user).first()
+    if not db_user:
+        return None
+    
+    hashed_password = hashPassword(newPassword)
+    db_user.password_user = hashed_password
+    db.commit()
+    db.refresh(db_user)
+    return db_user
+
 ## relasi
 def create_relasi(db: Session, relasi: schemas.RelasiCreate):
     db_relasi = models.Relasi(
@@ -341,9 +352,9 @@ def get_rekam_medis_by_id(db: Session, rekam_medis_id: int):
     return db.query(models.RekamMedis).filter(models.RekamMedis.id_rekam_medis == rekam_medis_id).first()
 
 def get_rekam_medis_selesai_by_user(db: Session, user_id: int):
-    return db.query(models.RekamMedis).join(models.RekamMedis.janji_temu).filter(
-        models.RekamMedis.id_user == user_id,
-        models.RekamMedis.janji_temu.status == "Selesai"
+    return db.query(models.RekamMedis).join(models.JanjiTemu, models.JanjiTemu.id_janji_temu == models.RekamMedis.id_janji_temu).filter(
+        models.JanjiTemu.id_user == user_id,
+        models.JanjiTemu.status == 'Selesai'
     ).all()
 
 # ##==================== item
