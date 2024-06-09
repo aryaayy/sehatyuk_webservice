@@ -269,6 +269,7 @@ def create_janji_temu(db: Session, janji_temu: schemas.JanjiTemuCreate):
         id_relasi = janji_temu.id_relasi,
         biaya_janji_temu = janji_temu.biaya_janji_temu,
         id_janji_temu_as_orang_lain = janji_temu.id_janji_temu_as_orang_lain,
+        status = janji_temu.status
     )
     db.add(db_janji_temu)
     db.commit()
