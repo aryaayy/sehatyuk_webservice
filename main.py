@@ -324,15 +324,40 @@ def read_janji_temu(id_user:int, db: Session = Depends(get_db),token: str = Depe
 @app.get("/get_janji_temu_by_id/{id_janji_temu}", response_model=schemas.JanjiTemu)
 def read_janji_temu_id(id_janji_temu:int, db: Session = Depends(get_db),token: str = Depends(oauth2_scheme)):
     usr =  verify_token(token) #bisa digunakan untuk mengecek apakah user cocok (tdk boleh akses data user lain)
-    print(usr)
+    # print(usr)
     janji_temu = crud.get_janji_temu_by_id(db, id_janji_temu=id_janji_temu)
     return janji_temu
 
-#ambil semua pengingat obat
-@app.get("/get_pengingat_minum_obat/", response_model=list[schemas.PengingatMinumObat])
-def read_pengingat_minum_obat(db: Session = Depends(get_db), skip: int = 0, limit: int = 100, token: str = Depends(oauth2_scheme)):
+@app.post("/create_janji_temu_as_orang_lain/", response_model=schemas.JanjiTemuAsOrangLain ) # response_model=schemas.Cart 
+def create_janji_temu_as_orang_lain(
+    janji_temu_as_orang_lain: schemas.JanjiTemuAsOrangLainCreate, db: Session = Depends(get_db),token: str = Depends(oauth2_scheme)):
+    usr =  verify_token(token) 
+    return crud.create_janji_temu_as_orang_lain(db=db, janji_temu_as_orang_lain=janji_temu_as_orang_lain)
+
+@app.get("/get_janji_temu_as_orang_lain_by_id/{id_user}", response_model=schemas.JanjiTemuAsOrangLain)
+def read_janji_temu_as_orang_lain_id(id_user:int, db: Session = Depends(get_db),token: str = Depends(oauth2_scheme)):
     usr =  verify_token(token)
-    pengingat_minum_obat = crud.get_pengingat_minum_obat(db, skip, limit)
+    janji_temu_as_orang_lain = crud.get_janji_temu_as_orang_lain_by_id(db, id_user=id_user)
+    return janji_temu_as_orang_lain
+
+@app.put("/alter_status/{id_janji_temu}", response_model=schemas.JanjiTemu)
+def alter_status(id_janji_temu:int, db: Session = Depends(get_db),token: str = Depends(oauth2_scheme)):
+    usr =  verify_token(token) #bisa digunakan untuk mengecek apakah user cocok (tdk boleh akses data user lain)
+    # print(usr)
+    janji_temu = crud.alter_status(db, id_janji_temu=id_janji_temu)
+    return janji_temu
+
+@app.delete("/delete_janji_temu/{id_janji_temu}")
+def delete_janji_temu(id_janji_temu:int,db: Session = Depends(get_db),token: str = Depends(oauth2_scheme) ):
+    usr =  verify_token(token) #bisa digunakan untuk mengecek apakah user cocok (tdk boleh akses data user lain)
+    return crud.delete_janji_temu_by_id(db,id_janji_temu)
+
+#ambil semua pengingat obat
+@app.get("/get_pengingat_minum_obat/{id_user}", response_model=list[schemas.PengingatMinumObat])
+def read_pengingat_minum_obat(id_user:int, db: Session = Depends(get_db),token: str = Depends(oauth2_scheme)):
+    usr =  verify_token(token) #bisa digunakan untuk mengecek apakah user cocok (tdk boleh akses data user lain)
+    # print(usr)
+    pengingat_minum_obat = crud.get_pengingat_minum_obat(db, id_user=id_user)
     return pengingat_minum_obat
 
 #ambil isi pengingat
