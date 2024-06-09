@@ -322,17 +322,14 @@ def delete_janji_temu_by_id(db: Session, id_janji_temu: int):
     return {"record_dihapus":hasil} 
 
 ## pengingat_minum_obat
-def create_pengingat_minum_obat(db: Session, pengingat_minum_obat: schemas.JanjiTemuCreate):
-    db_pengingat_minum_obat = models.JanjiTemu(
-        id_pengingat = pengingat_minum_obat.id_pengingat,
+def create_pengingat_minum_obat(db: Session, pengingat_minum_obat: schemas.PengingatMinumObatCreate):
+    db_pengingat_minum_obat = models.PengingatMinumObat(
         id_obat = pengingat_minum_obat.id_obat,
         id_user = pengingat_minum_obat.id_user,
         dosis = pengingat_minum_obat.dosis,
         sendok = pengingat_minum_obat.sendok,
         jadwal = pengingat_minum_obat.jadwal,
         aturan = pengingat_minum_obat.aturan,
-        obat = pengingat_minum_obat.obat,
-        user = pengingat_minum_obat.user,
     )
     db.add(db_pengingat_minum_obat)
     db.commit()
