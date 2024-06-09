@@ -156,7 +156,6 @@ class User(UserBase):
     class Config:
         orm_mode = True
 
-
 # Janji Temu
 class JanjiTemuBase(BaseModel):
     kode_janji_temu: str
