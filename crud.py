@@ -353,10 +353,13 @@ def get_rekam_medis_by_id(db: Session, rekam_medis_id: int):
     return db.query(models.RekamMedis).filter(models.RekamMedis.id_rekam_medis == rekam_medis_id).first()
 
 def get_rekam_medis_selesai_by_user(db: Session, user_id: int):
-    return db.query(models.RekamMedis).join(models.JanjiTemu, models.JanjiTemu.id_janji_temu == models.RekamMedis.id_janji_temu).filter(
-        models.JanjiTemu.id_user == user_id,
-        models.JanjiTemu.status == 'Selesai'
-    ).all()
+    return db.query(models.RekamMedis).join(models.RekamMedis.janji_temu).filter(models.JanjiTemu.id_user == user_id, models.JanjiTemu.status == "Selesai").all()
+
+# def get_rekam_medis_selesai_by_user(db: Session, user_id: int):
+#     return db.query(models.RekamMedis).join(models.JanjiTemu, models.JanjiTemu.id_janji_temu == models.RekamMedis.id_janji_temu).filter(
+#         models.JanjiTemu.id_user == user_id,
+#         models.JanjiTemu.status == 'Selesai'
+#     ).all()
 
 # ##==================== item
 
