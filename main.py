@@ -311,15 +311,21 @@ def read_janji_temu_id(id_janji_temu:int, db: Session = Depends(get_db),token: s
 @app.post("/create_janji_temu_as_orang_lain/", response_model=schemas.JanjiTemuAsOrangLain ) # response_model=schemas.Cart 
 def create_janji_temu_as_orang_lain(
     janji_temu_as_orang_lain: schemas.JanjiTemuAsOrangLainCreate, db: Session = Depends(get_db),token: str = Depends(oauth2_scheme)):
-    usr =  verify_token(token) #bisa digunakan untuk mengecek apakah user cocok (tdk boleh akses data user lain)
-    # print(usr)
+    usr =  verify_token(token) 
     return crud.create_janji_temu_as_orang_lain(db=db, janji_temu_as_orang_lain=janji_temu_as_orang_lain)
 
 @app.get("/get_janji_temu_as_orang_lain_by_id/{id_user}", response_model=schemas.JanjiTemuAsOrangLain)
 def read_janji_temu_as_orang_lain_id(id_user:int, db: Session = Depends(get_db),token: str = Depends(oauth2_scheme)):
-    usr =  verify_token(token) #bisa digunakan untuk mengecek apakah user cocok (tdk boleh akses data user lain)
+    usr =  verify_token(token)
     janji_temu_as_orang_lain = crud.get_janji_temu_as_orang_lain_by_id(db, id_user=id_user)
     return janji_temu_as_orang_lain
+
+@app.put("/alter_status/{id_janji_temu}", response_model=schemas.JanjiTemu)
+def alter_status(id_janji_temu:int, db: Session = Depends(get_db),token: str = Depends(oauth2_scheme)):
+    usr =  verify_token(token) #bisa digunakan untuk mengecek apakah user cocok (tdk boleh akses data user lain)
+    # print(usr)
+    janji_temu = crud.alter_status(db, id_janji_temu=id_janji_temu)
+    return janji_temu
 
 #ambil semua pengingat obat
 @app.get("/get_pengingat_minum_obat/{id_user}", response_model=list[schemas.PengingatMinumObat])

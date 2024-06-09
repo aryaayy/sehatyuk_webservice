@@ -1,6 +1,7 @@
 from database import BaseDB
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Date, Float, Text
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Date, Float, Text, Enum
 from sqlalchemy.orm import relationship
+from enum import Enum as PyEnum
 # from sqlalchemy.orm import Mapped
 # from typing import List
 # from sqlalchemy import Table
@@ -45,6 +46,13 @@ class PengingatMinumObat(BaseDB):
     # nama_obat = relationship("Obat", back_populates="pengingat_minum_obat")
     # foto_obat = relationship("Obat", back_populates="pengingat_minum_obat")
 
+class StatusEnum(PyEnum):
+    MENUNGGU_AMBIL_ANTRIAN = "Menunggu Ambil Antrian"
+    MENUNGGU_ANTRIAN = "Menunggu Antrian"
+    MENUNGGU_SESI = "Menunggu Sesi"
+    MENUNGGU_PEMBAYARAN = "Menunggu Pembayaran"
+    SELESAI = "Selesai"
+
 class JanjiTemu(BaseDB):
     __tablename__ = 'janji_temu'
 
@@ -57,6 +65,7 @@ class JanjiTemu(BaseDB):
     id_relasi = Column(Integer, ForeignKey('relasi.id_relasi'), nullable=False)
     biaya_janji_temu = Column(Integer, nullable=False)
     id_janji_temu_as_orang_lain = Column(Integer, ForeignKey('janji_temu_as_orang_lain.id_janji_temu_as_orang_lain'), nullable=False)
+    status = Column(Enum(StatusEnum, native_enum=False, values_callable=lambda x: [e.value for e in x]), nullable=False)
     dokter = relationship("Dokter",back_populates="janji_temu")
     user = relationship("User", back_populates="janji_temu")
     relasi = relationship("Relasi", back_populates="janji_temu")

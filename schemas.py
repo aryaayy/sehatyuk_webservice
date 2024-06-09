@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from datetime import date
-from typing import List, Optional
+from typing import List, Optional, Literal
 
 
 # Poli
@@ -186,6 +186,13 @@ class JanjiTemuBase(BaseModel):
     id_relasi: int
     biaya_janji_temu: int
     id_janji_temu_as_orang_lain: int
+    status: Literal[
+        'Menunggu Ambil Antrian',
+        'Menunggu Antrian',
+        'Menunggu Sesi',
+        'Menunggu Pembayaran',
+        'Selesai'
+    ]
     dokter: Optional[Dokter] = []
     user: Optional[User] = []
     relasi: Optional[Relasi] = []

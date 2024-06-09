@@ -50,8 +50,8 @@ def get_janji_temu(db: Session, id_user: int):
 def get_janji_temu_by_id(db: Session, id_janji_temu: int):
     return db.query(models.JanjiTemu).filter(models.JanjiTemu.id_janji_temu == id_janji_temu).first()
 
-# def get_janji_temu_as_orang_lain_by_id(db: Session, id_user: int):
-#     return db.query(models.JanjiTemuAsOrangLain).filter(models.JanjiTemuAsOrangLain.id_user == id_user).order_by(models.JanjiTemuAsOrangLain.id_janji_temu_as_orang_lain.desc()).first()
+# def alter_status(db: Session, id_janji_temu: int):
+#     return db.query(models.JanjiTemu).filter(models.JanjiTemu.id_janji_temu == id_janji_temu)
 
 def get_pengingat_minum_obat(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.PengingatMinumObat).join(models.Obat).join(models.User).offset(skip).limit(limit).all()
@@ -245,6 +245,43 @@ def create_janji_temu(db: Session, janji_temu: schemas.JanjiTemuCreate):
     db.commit()
     db.refresh(db_janji_temu)
     return db_janji_temu
+
+def alter_status(db: Session, id_janji_temu: int):
+    # Fetch the current JanjiTemu record
+    janji_temu = db.query(models.JanjiTemu).filter(models.JanjiTemu.id_janji_temu == id_janji_temu).one()
+    
+    # Define the sequence of status values
+    status_sequence = [
+        models.StatusEnum.MENUNGGU_AMBIL_ANTRIAN,
+        models.StatusEnum.MENUNGGU_ANTRIAN,
+        models.StatusEnum.MENUNGGU_SESI,
+        models.StatusEnum.MENUNGGU_PEMBAYARAN,
+        models.StatusEnum.SELESAI
+    ]
+    
+    # Get the current status
+    current_status = janji_temu.status
+    
+    # Determine the next status value
+    if current_status in status_sequence:
+        current_index = status_sequence.index(current_status)
+        if current_index < len(status_sequence) - 1:
+            new_status = status_sequence[current_index + 1]
+        else:
+            new_status = status_sequence[current_index]  # Already at the last status, no change
+    else:
+        new_status = status_sequence[0]  # Default to the first status if current status is invalid
+    
+    # Update the status
+    janji_temu.status = new_status
+    
+    # Commit the transaction
+    db.commit()
+    
+    # Refresh the instance to reflect changes
+    db.refresh(janji_temu)
+    
+    return janji_temu
 
 ## janji_temu
 def create_janji_temu_as_orang_lain(db: Session, janji_temu_as_orang_lain: schemas.JanjiTemuAsOrangLainCreate):
