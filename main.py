@@ -177,6 +177,26 @@ def read_user(id_user: int, db: Session = Depends(get_db),token: str = Depends(o
         raise HTTPException(status_code=404, detail="User not found")
     return db_user
 
+# update user
+@app.put("/update_user/{id_user}", response_model=schemas.User)
+def update_user(id_user: int, user_update: schemas.UserBase, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+    usr =  verify_token(token) 
+
+    db_user_old = crud.get_user(db, id_user)
+    db_user_email = crud.get_user_by_email(db, email=user_update.email_user)
+    db_user_no_telp = crud.get_user_by_no_telp(db, no_telp=user_update.no_telp_user)
+    if db_user_old.email_user != user_update.email_user:
+        if db_user_email:
+            raise HTTPException(status_code=400, detail="Error: Email sudah digunakan")
+    if db_user_old.no_telp_user != user_update.no_telp_user:
+        if db_user_no_telp:
+            raise HTTPException(status_code=400, detail="Error: No telp sudah digunakan")
+
+    db_user = crud.update_user(db, id_user, user_update)
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return db_user
+
 # tambah item ke keranjang
 # response ada id (cart), sedangkan untuk paramater input  tidak ada id (cartbase)
 @app.post("/create_relasi/", response_model=schemas.Relasi ) # response_model=schemas.Cart 
