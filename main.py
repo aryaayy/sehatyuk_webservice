@@ -13,7 +13,7 @@
 from os import path
 from fastapi import Depends, Request, FastAPI, HTTPException
 
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.security import OAuth2PasswordRequestForm,OAuth2PasswordBearer
 from pydantic import BaseModel
 
@@ -197,6 +197,14 @@ def update_user(id_user: int, user_update: schemas.UserBase, db: Session = Depen
         raise HTTPException(status_code=404, detail="User not found")
     return db_user
 
+@app.put("/update_password/{id_user}", response_model= schemas.ResponseMSG)
+def update_password(id_user: int, passwords: schemas.Password, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+    if not match_password(db, id_user, passwords.old_password):
+        raise HTTPException(status_code=400, detail="Error: Password tidak sesuai")
+    update_user_password =  crud.update_password(db,id_user,passwords.new_password)
+    if update_user_password:
+        return JSONResponse(status_code=200, content={"message" : "Password updated successfully"})
+        
 # tambah item ke keranjang
 # response ada id (cart), sedangkan untuk paramater input  tidak ada id (cartbase)
 @app.post("/create_relasi/", response_model=schemas.Relasi ) # response_model=schemas.Cart 
@@ -523,6 +531,12 @@ def authenticate_by_no_telp(db,user: schemas.UserCreate):
     else:
         return False    
     
+def match_password(db, id_user, typedPassword: schemas.Password):
+    user = crud.get_user(db, id_user)
+    if user:
+        return user.password_user == crud.hashPassword(typedPassword)
+    else:
+        return False
 
 SECRET_KEY = "sehatyukgaissss"
 

@@ -3,6 +3,9 @@ from datetime import date
 from typing import List, Optional, Literal
 
 
+class ResponseMSG(BaseModel):
+    msg: str
+
 # Poli
 class PoliBase(BaseModel):
     nama_poli: str
@@ -156,6 +159,10 @@ class User(UserBase):
 
     class Config:
         orm_mode = True
+
+class Password(BaseModel):
+    old_password: str
+    new_password: str
 
 # Janji Temu as Orang Lain
 class JanjiTemuAsOrangLainBase(BaseModel):

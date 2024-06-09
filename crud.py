@@ -177,6 +177,17 @@ def update_user(db: Session, id_user: int, user_update: schemas.UserBase):
     
     return db_user
 
+def update_password(db: Session, id_user: int, newPassword: str):
+    db_user = db.query(models.User).filter(models.User.id_user == id_user).first()
+    if not db_user:
+        return None
+    
+    hashed_password = hashPassword(newPassword)
+    db_user.password_user = hashed_password
+    db.commit()
+    db.refresh(db_user)
+    return db_user
+
 ## relasi
 def create_relasi(db: Session, relasi: schemas.RelasiCreate):
     db_relasi = models.Relasi(
