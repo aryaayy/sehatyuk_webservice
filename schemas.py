@@ -239,3 +239,18 @@ class PengingatMinumObat(PengingatMinumObatBase):
     class Config:
         orm_mode = True
         
+        
+# rekam medis
+class RekamMedisBase(BaseModel):
+    id_user: int
+    id_janji_temu: int
+    hasil_diagnosis: str
+    pengobatan: str
+    obat: str
+    catatan: str
+
+class RekamMedis(RekamMedisBase):
+    id_rekam_medis: int
+
+    class Config:
+        orm_mode = True
