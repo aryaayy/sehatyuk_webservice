@@ -244,6 +244,7 @@ class PengingatMinumObat(PengingatMinumObatBase):
 class RekamMedisBase(BaseModel):
     id_user: int
     id_janji_temu: int
+    id_dokter: int
     hasil_diagnosis: str
     pengobatan: str
     obat: str
