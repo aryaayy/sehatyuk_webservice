@@ -42,7 +42,7 @@ def get_jadwal_dokter(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.JadwalDokter).offset(skip).limit(limit).all()
 
 def get_jadwal_dokter_by_id(db: Session, id_dokter: int):
-    return db.query(models.JadwalDokter).filter(models.JadwalDokter.id_dokter == id_dokter).all()
+    return db.query(models.JadwalDokter).filter(models.JadwalDokter.id_dokter == id_dokter).order_by(models.JadwalDokter.tanggal_jadwal_dokter).all()
 
 def get_janji_temu(db: Session, id_user: int):
     return db.query(models.JanjiTemu).filter(models.JanjiTemu.id_user == id_user).order_by(models.JanjiTemu.tgl_janji_temu).all()
