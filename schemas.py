@@ -187,7 +187,7 @@ class JanjiTemuAsOrangLain(JanjiTemuAsOrangLainBase):
 class StatusEnum(str, Enum):
     MENUNGGU_AMBIL_ANTRIAN = 'Menunggu Ambil Antrian'
     MENUNGGU_ANTRIAN = 'Menunggu Antrian'
-    MENUNGGU_SESI = 'Menunggu Sesi'
+    DALAM_SESI = 'Dalam Sesi'
     MENUNGGU_PEMBAYARAN = 'Menunggu Pembayaran'
     SELESAI = 'Selesai'
 
