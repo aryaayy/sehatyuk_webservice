@@ -107,6 +107,7 @@ class Obat(BaseDB):
     id_jenis_obat = Column(Integer, ForeignKey('jenis_obat.id_jenis_obat'), nullable=False)
     jenis_obat = relationship("JenisObat",back_populates="obat")
     pengingat_minum_obat = relationship("PengingatMinumObat", back_populates="obat")
+    rekam_medis = relationship("RekamMedis", back_populates="obat")
 
 class Poli(BaseDB):
     __tablename__ = 'poli'
@@ -160,9 +161,11 @@ class RekamMedis(BaseDB):
     
     id_rekam_medis = Column(Integer, primary_key=True, index=True)
     id_janji_temu = Column(Integer, ForeignKey('janji_temu.id_janji_temu'), nullable=False)
+    id_obat = Column(Integer, ForeignKey('obat.id_obat'), nullable=False)
     hasil_diagnosis = Column(Text, nullable=False)
     pengobatan = Column(Text, nullable=False)
-    obat = Column(Text, nullable=False)
+    dosis_obat = Column(Text, nullable=False)
     catatan = Column(Text, nullable=False)
     
     janji_temu = relationship("JanjiTemu", back_populates="rekam_medis")
+    obat = relationship("Obat", back_populates="rekam_medis")
